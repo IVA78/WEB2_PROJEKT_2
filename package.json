@@ -1,0 +1,28 @@
+{
+  "name": "web2_projekt_2",
+  "version": "1.0.0",
+  "description": "Web-aplikacija demonstrira dvije uobičajene ranjivosti web-aplikacija: SQL Injection i CSRF (Cross-Site Request Forgery). Aplikacija je osmišljena kao edukativni alat za razumijevanje tih sigurnosnih prijetnji te načina kako ih potencijalni napadači mogu iskoristiti. U aplikaciji je omogućeno uključivanje i isključivanje ranjivosti kako bi se jednostavno vidio efekt napada i procijenila važnost implementacije sigurnosnih zaštita.",
+  "main": "index.js",
+  "scripts": {
+    "build": "npm run clean && tsc && npm run copy-views && npm run copy-public && npm run copy-env",
+    "clean": "shx rm -rf dist",
+    "copy-views": "shx cp -r src/views/ dist",
+    "copy-public": "shx cp -r src/public/ dist/public",
+    "copy-env": "shx cp -r src/environments/ dist/environments",
+    "start": "node dist/server.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^16.4.5",
+    "express": "^4.21.1",
+    "path": "^0.12.7",
+    "pug": "^3.0.3",
+    "shx": "^0.3.4"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.0",
+    "@types/node": "^22.8.6"
+  }
+}
