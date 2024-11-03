@@ -9,20 +9,28 @@
     "copy-views": "shx cp -r src/views/ dist",
     "copy-public": "shx cp -r src/public/ dist/public",
     "copy-env": "shx cp -r src/environments/ dist/environments",
+    "copy-middleware": "shx cp -r src/middleware/ dist/middleware",
     "start": "node dist/server.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "cookie-parser": "^1.4.7",
+    "crypto": "^1.0.1",
     "dotenv": "^16.4.5",
     "express": "^4.21.1",
+    "express-session": "^1.18.1",
+    "fs": "^0.0.1-security",
+    "https": "^1.0.0",
     "path": "^0.12.7",
     "pug": "^3.0.3",
     "shx": "^0.3.4"
   },
   "devDependencies": {
+    "@types/cookie-parser": "^1.4.7",
     "@types/express": "^5.0.0",
+    "@types/express-session": "^1.18.0",
     "@types/node": "^22.8.6"
   }
 }

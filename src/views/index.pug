@@ -1,9 +1,29 @@
 doctype html
 html
   head
-    title QR code generator
+    title SQL umetanje i CSRF napad
     link(rel='stylesheet', href='/css/index.css')
   body
-    h1 Welcome to my web page! 
+    h1 Dobro došli na web aplikaciju za demonstraciju SQL umetanja i CSRF napada!
+
+    hr
+    h1 Isprobaj CSRF napad.
+    h3 Prijenos novca
     
+    form(action="/transfer-funds" method="POST")
+      label(for="amount") Iznos:
+      input#amount(type="text", name="amount", required)
+      br
+      label(for="account") Račun primatelja:
+      input#account(type="text", name="account", required)
+      br
+      
+      label(for="csrfToggle")
+        input#csrfToggle(type="checkbox", onchange="toggleCSRF()")
+        |  Uključi CSRF zaštitu
+      br
+      
+      input(type="hidden", name="csrf_token", value="fixed_csrf_token")
+      button(type="submit") Potvrdi
+
     script(src='/js/script.js')
