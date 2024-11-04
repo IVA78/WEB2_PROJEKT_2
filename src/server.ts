@@ -6,7 +6,10 @@ import session from "express-session";
 import crypto from "crypto";
 import https from "https";
 import fs from "fs";
+import cors from "cors";
+
 import disableCSRF from "./middleware/disableCSRF";
+import { Console } from "console";
 
 //definiranje porta
 const port = process.env.PORT || 3000;
@@ -20,6 +23,7 @@ dotenv.config({
 const app = express();
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
+app.use(cors({ origin: `https://localhost:${port}`, credentials: true })); //azuriraj kod deploya!
 
 //postavljanje sesijskog middleware-a
 app.use(
@@ -69,7 +73,10 @@ app.set("view engine", "pug");
 app.get("/", async (req: Request, res: Response) => {
   try {
     //renderiranje pocetne stranice
-    res.render("index");
+    const csrfTokenFromServer = req.cookies.csrf_token;
+    res.render("index", {
+      csrfTokenFromServer: csrfTokenFromServer,
+    });
   } catch (error) {
     console.error("Error:", error);
     res.status(500).send("An error occurred while loading home page.");
@@ -79,9 +86,14 @@ app.get("/", async (req: Request, res: Response) => {
 //definiranje rute za prebacivanje novaca
 app.post("/transfer-funds", disableCSRF, (req: Request, res: Response) => {
   const { amount, account } = req.body;
+  console.log("Amout: ", amount, "Account: ", account);
   res.send(
     `Funds transfer successful: Transferred ${amount} to account ${account}`
   );
+});
+
+app.get("/csrf-attack", (req: Request, res: Response) => {
+  res.render("csrf_attack", {});
 });
 
 https

@@ -2,28 +2,55 @@ doctype html
 html
   head
     title SQL umetanje i CSRF napad
-    link(rel='stylesheet', href='/css/index.css')
+    link(rel='stylesheet' href='/css/index.css')
   body
     h1 Dobro došli na web aplikaciju za demonstraciju SQL umetanja i CSRF napada!
 
     hr
     h1 Isprobaj CSRF napad.
+
+    h3 Opis problema i simulacije napada 
+    p Lažiranje zahtjeva na drugom sjedištu obuhvaća slanje zahtjeva od strane druge web stranice u ime korisnika. Karakterističan primjer je prebacivanje novaca, što će biti demonstrirano i u ovom primjeru. Forma prikazana na zaslonu sadržava dva unosa: iznos i račun primatelja. Ispunjavanjem traženih podataka korisnik dobija potvrdu o uspješnoj translakciji.
+    p Recimo da napadač napravi drugi URL ili, u ovom primjeru, web stranicu s kojom će prebaciti novce na svoj račun. Klikom na gumb "Simuliraj napad" simulirat će se posjet takvoj stranici čiji je kod: 
+    pre 
+      code
+        | doctype html
+        | html(lang="en")
+        |   head
+        |     meta(charset="UTF-8")
+        |     title CSRF napad
+        |   body
+        |     h1 Simuliranje CSRF napada
+        |     form#csrfForm(action="/transfer-funds" method="POST")
+        |       input(type="hidden" name="amount" value="1000")
+        |       input(type="hidden" name="account" value="hacker_account_98765")
+        |     script.
+        |       document.getElementById("csrfForm").submit(); 
+
+    p U kodu vidimo da je napadač napravio stranicu koja će automatski poslati zahtjev za prebacivanje novaca na njegov račun: lažirat će ispunjavanje ispod prikazane forme.
+    p Uključivanjem opcije za CSRF zaštitu uključuje se provjera CSRF tokena koji se šalje isključivo popunjavanjem ispod prikazane forme.
+    p Vrijednost tokena dohvaćena je sa servera: pri kreiranju cookie-ja na poslužitelju, u njega se sprema i CSRF token. Isti token se šalje klijentu i postavlja se u formu za prijenos novca. Ukoliko se token ne postavi na opisani način, dodjeljuje mu se vrijednost "attack" zbog čega će usporedba tokena iz cookie-ja i forme detektirati lažni zahtjev.
+    p Napomena: za kolačić je postavljena zastavica httpOnly čime se onemogućuje izvlačenje tokena iz cookie-ja.
+
+    a(href="/csrf-attack" class="button") Simuliraj napad.
+    br
+    label(for="csrfToggle")
+      input#csrfToggle(type="checkbox" onchange="toggleCSRF()")
+      |  Uključi CSRF zaštitu
+    br
     h3 Prijenos novca
-    
+
+
     form(action="/transfer-funds" method="POST")
       label(for="amount") Iznos:
-      input#amount(type="text", name="amount", required)
+      input#amount(type="text" name="amount", required)
       br
       label(for="account") Račun primatelja:
-      input#account(type="text", name="account", required)
+      input#account(type="text" name="account", required)
       br
-      
-      label(for="csrfToggle")
-        input#csrfToggle(type="checkbox", onchange="toggleCSRF()")
-        |  Uključi CSRF zaštitu
-      br
-      
-      input(type="hidden", name="csrf_token", value="fixed_csrf_token")
+
+      input(type="hidden" name="csrf_token", value=(csrfTokenFromServer || "attack"))
       button(type="submit") Potvrdi
+
 
     script(src='/js/script.js')
