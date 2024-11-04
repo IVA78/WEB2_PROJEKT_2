@@ -9,7 +9,7 @@ import fs from "fs";
 import cors from "cors";
 
 import disableCSRF from "./middleware/disableCSRF";
-import { Console } from "console";
+import sendQuery from "./utils/sendQuery";
 
 //definiranje porta
 const port = process.env.PORT || 3000;
@@ -68,6 +68,31 @@ app.use((req: Request, res: Response, next: NextFunction) => {
 app.use(express.static(path.join(__dirname, "./public")));
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "pug");
+
+//inicijalno definiranje entiteta u bazi
+async function databaseInit() {
+  const queryText1 = `CREATE TABLE IF NOT EXISTS users (
+                      username VARCHAR(100) PRIMARY KEY,
+                      password VARCHAR(100) NOT NULL,
+                      firstName VARCHAR(100) NOT NULL,
+                      lastName VARCHAR(100) NOT NULL,
+                      email VARCHAR(100) UNIQUE NOT NULL,
+                      phoneNumber VARCHAR(100)
+                      );`;
+
+  await sendQuery(queryText1);
+
+  const result = await sendQuery(`SELECT table_name
+    FROM information_schema.tables
+    WHERE table_schema = 'public';`);
+
+  if (result) {
+    console.log("Query result:", result.rows);
+  } else {
+    console.log("Query execution failed.");
+  }
+}
+//databaseInit();
 
 //definiranje osnovne rute za posluzivanje pocetne stranice
 app.get("/", async (req: Request, res: Response) => {
