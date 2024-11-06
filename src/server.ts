@@ -167,7 +167,8 @@ app.post("/login", disableSQL, async (req: Request, res: Response) => {
   }
 });
 
-https
+/**
+ https
   .createServer(
     {
       key: fs.readFileSync("server.key"),
@@ -178,10 +179,8 @@ https
   .listen(port, () => {
     console.log(`Server started, port: ${port}!`);
   });
+ */
 
-/**
- app.listen(port, () => {
+app.listen(port, () => {
   console.log(`Klijentski server je pokrenut, port: ${port}!`);
 });
-
- */
