@@ -1,0 +1,27 @@
+1. Preuzeti projekt na računalo sa GitHub repozitorija
+2. Otvoriti projekt u VSCode-u /pozicionirati se u WEB2_PROJEKT_2 folder
+3. Pokrenuti naredbu: npm install
+4. Pokrenuti naredbu: npm run build
+5. Pokrenuti naredbu: npm run start
+6. Aplikacija je pokrenuta na: http://localhost:3000/
+
+Napomena: aplikacija potencijalno neće raditi bez korištenja HTTPS protokola, zbog čega treba u datoteci server.ts otkomentirati konfiguracijski kod za HTTPS poslužitelja te zakomentirati trenutno pokretanje servera bez HTTPS protokola.
+
+ https
+  .createServer(
+    {
+      key: fs.readFileSync("server.key"),
+      cert: fs.readFileSync("server.cert"),
+    },
+    app
+  )
+  .listen(port, () => {
+    console.log(`Server started, port: ${port}!`);
+  });
+ 
+
+/**
+app.listen(port, () => {
+  console.log(`Klijentski server je pokrenut, port: ${port}!`);
+});
+*/
