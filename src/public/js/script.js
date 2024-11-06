@@ -14,7 +14,22 @@ function toggleCSRF() {
   }
 }
 
+function toggleSQL() {
+  console.log("SQL injection protection toggled!");
+  const checkbox = document.getElementById("sqlToggle");
+  if (checkbox.checked) {
+    console.log("SQL injection vulnerability enabled");
+    document.cookie = "sql_injection_enabled=true; path=/";
+  } else {
+    console.log("SQL injection vulnerability disabled");
+    document.cookie = "sql_injection_enabled=false; path=/";
+  }
+}
+
 window.onload = function () {
-  const enabled = document.cookie.includes("csrf_enabled=true");
-  document.getElementById("csrfToggle").checked = enabled;
+  const enabled1 = document.cookie.includes("csrf_enabled=true");
+  document.getElementById("csrfToggle").checked = enabled1;
+
+  const enabled2 = document.cookie.includes("sql_injection_enabled=true");
+  document.getElementById("sqlToggle").checked = enabled2;
 };

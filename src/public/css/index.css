@@ -37,6 +37,7 @@ label {
 }
 
 input[type="text"],
+input[type="password"],
 input[type="checkbox"] {
   width: calc(100% - 22px);
   padding: 10px;

@@ -9,6 +9,7 @@ import fs from "fs";
 import cors from "cors";
 
 import disableCSRF from "./middleware/disableCSRF";
+import disableSQL from "./middleware/disableSQL";
 import sendQuery from "./utils/sendQuery";
 
 //definiranje porta
@@ -71,6 +72,7 @@ app.set("view engine", "pug");
 
 //inicijalno definiranje entiteta u bazi
 async function databaseInit() {
+  await sendQuery("DROP TABLE users");
   const queryText1 = `CREATE TABLE IF NOT EXISTS users (
                       username VARCHAR(100) PRIMARY KEY,
                       password VARCHAR(100) NOT NULL,
@@ -81,6 +83,15 @@ async function databaseInit() {
                       );`;
 
   await sendQuery(queryText1);
+
+  const queryText2 = `INSERT INTO users (username, password, firstName, lastName, email, phoneNumber) VALUES
+                      ('ivanp', 'lozinka123', 'Ivan', 'Perić', 'ivanp@example.com', '091-234-5678'),
+                      ('anam', 'sigurnaLozinka1', 'Ana', 'Marić', 'anam@example.com', '092-345-6789'),
+                      ('markov', 'lozinka!23', 'Marko', 'Vuković', 'markov@example.com', '095-456-7890'),
+                      ('petral', 'Petra#22', 'Petra', 'Lukić', 'petral@example.com', '097-567-8901'),
+                      ('sanjak', 'sigurno@123', 'Sanja', 'Kovač', 'sanjak@example.com', '098-678-9012');
+                      `;
+  await sendQuery(queryText2);
 
   const result = await sendQuery(`SELECT table_name
     FROM information_schema.tables
@@ -117,8 +128,43 @@ app.post("/transfer-funds", disableCSRF, (req: Request, res: Response) => {
   );
 });
 
+//definiranje rute za simuliranje CSRF napada
 app.get("/csrf-attack", (req: Request, res: Response) => {
   res.render("csrf_attack", {});
+});
+
+//definiranje rute za prijavu korisnika u sustav
+app.post("/login", disableSQL, async (req: Request, res: Response) => {
+  //slanje korisničkih podataka iz baze ovisno o unesenom korisnickom imenu i lozinki
+  console.log("Korisničko ime: ", req.body.username);
+  //dohvat podataka iz baze
+  try {
+    const username = req.body.username;
+    const password = req.body.password;
+    const params = [username, password];
+
+    let queryText;
+    let result;
+
+    if (req.sqlInjectionEnabled) {
+      // Ako je zaštita uključena, koristi parametarski upit (AUTOMATSKA ZASTITA)
+      queryText = `SELECT * FROM users WHERE username = $1 AND password = $2`;
+      result = await sendQuery(queryText, params);
+    } else {
+      // Ako zaštita nije uključena, koristi direktni upit
+      queryText = `SELECT * FROM users WHERE username = '${username}' AND password = '${password}'`;
+      result = await sendQuery(queryText);
+    }
+
+    if (result && result.rows.length > 0) {
+      res.json({ message: "Uspješna prijava", user: result.rows });
+    } else {
+      res.status(401).send("Neispravno korisničko ime ili lozinka");
+    }
+  } catch (error) {
+    console.error("Error:", error);
+    res.status(500).send("Greška na serveru");
+  }
 });
 
 https
