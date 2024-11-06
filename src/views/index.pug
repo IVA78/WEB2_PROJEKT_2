@@ -12,7 +12,7 @@ html
     p SQL umetanje je tehnika napada umetanjem zlonamjernog koda u SQL naredbe i to najčešće putem web obrazaca, što će biti demonstrirano u ovom primjeru.
     p Ispod prikazana forma omogućava korisniku prijavu u sustav i pregled korisničkih podataka nakon prijave. U demonstracijske svrhe, u bazi podataka nalazi se nekoliko predefiniranih korisnika ovog sustava.
     p Primjer korisničkih podataka za prijavu u sustav i pregled korisničkih podataka: username = 'ivanp', password = 'lozinka123'
-    p Napadač bi mogao pokušati unijeti zloramjerne SQL upite kako bi ispitao ranjivost aplikacije. Dovoljno je, za početak, da zna samo jedno korisničko ime. Na primjer, unosom "ivan' --" za korisničko ime i unosom bilo čega za lozinku korisnik se može prijaviti u sustav bez da zapravo zna lozinku.
+    p Napadač bi mogao pokušati unijeti zloramjerne SQL upite kako bi ispitao ranjivost aplikacije. Dovoljno je, za početak, da zna samo jedno korisničko ime. Na primjer, unosom "ivanp' --" za korisničko ime i unosom bilo čega za lozinku korisnik se može prijaviti u sustav bez da zapravo zna lozinku.
     p Dodatan primjer zlonamernog upita: unosom "ivanp' OR 1=1; --" napadač može dobiti podatke o svim korisnicima sustava.
     p Opisano ponašanje može se testirati uz uključenu/isključenu zaštitu od SQL umetanja.
     p Napomena: kao zaštita koristi se paretarski upit koji razdvaja SQL upit i parametre te ih odvojeno šalje u bazu podataka gdje se detektira pokušaj SQL umetanja.
